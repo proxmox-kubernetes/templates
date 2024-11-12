@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 apt update -y -q
 apt install libguestfs-tools -y -q
