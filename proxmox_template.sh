@@ -1,12 +1,20 @@
 #!/usr/bin/env bash
 
-apt update -y
-apt install libguestfs-tools -y
+apt update -y -q
+apt install libguestfs-tools -y -q
+
+read -r -p "Image URL: " CLOUD_IMAGE_URL
 
 CORES="${CORES:-1}"
 MEMORY="${MEMORY:-2048}"
 DISK_SIZE="${DISK_SIZE:-16G}"
 TEMPLATE_ID="${TEMPLATE_ID:-9001}"
+
+echo Cloud Image URL "$CLOUD_IMAGE_URL"
+echo Core "$CORES"
+echo Memory "$MEMORY"
+echo Disk Size "$DISK_SIZE"
+echo Template ID "$TEMPLATE_ID"
 
 CLOUD_IMAGE_FILE="wget -qO- -P /var/lib/vz/template/iso/ $CLOUD_IMAGE_URL"
 
