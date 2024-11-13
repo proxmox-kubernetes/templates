@@ -4,7 +4,7 @@ apt update -y -q
 apt install libguestfs-tools -y -q
 
 echo "Image URL: "
-read -r -p CLOUD_IMAGE_URL
+read -p CLOUD_IMAGE_URL
 
 CORES="${CORES:-1}"
 MEMORY="${MEMORY:-2048}"
