@@ -3,11 +3,23 @@
 apt update -y -q
 apt install libguestfs-tools -y -q
 
+DISTRO="${DISTRO:-debian}"
+case $DISTRO in
+  debian)
+    CLOUD_IMAGE_URL="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
+    ;;
+  *)
+    echo "No Distro Set" >&2
+    exit 1
+    ;;
+esac
+
 CORES="${CORES:-1}"
 MEMORY="${MEMORY:-2048}"
 DISK_SIZE="${DISK_SIZE:-16G}"
 TEMPLATE_ID="${TEMPLATE_ID:-9001}"
 
+echo Distro "$DISTRO"
 echo Cloud Image URL "$CLOUD_IMAGE_URL"
 echo Core "$CORES"
 echo Memory "$MEMORY"
