@@ -27,6 +27,7 @@ echo Disk Size "$DISK_SIZE"
 echo Template ID "$TEMPLATE_ID"
 
 CLOUD_IMAGE_FILE="$(wget -qPO- /var/lib/vz/template/iso/ $CLOUD_IMAGE_URL)"
+echo Cloud Image File "$CLOUD_IMAGE_FILE"
 
 virt-customize -a "$CLOUD_IMAGE_FILE" --install qemu-guest-agent
 
