@@ -40,7 +40,7 @@ qm set "$TEMPLATE_ID" --boot c --bootdisk scsi0
 qm set "$TEMPLATE_ID" --ide2 local-lvm:cloudinit
 qm set "$TEMPLATE_ID" --agent 1
 qm set "$TEMPLATE_ID" --machine q35
-qm set "$TEMPLATE_ID" --serial0 socker --vga serial0
+qm set "$TEMPLATE_ID" --serial0 socket --vga serial0
 qm set "$TEMPLATE_ID" --ipconfig0 ip=dhcp
 qm resize "$TEMPLATE_ID" scsi0 "$DISK_SIZE"
 qm template "$TEMPLATE_ID"
