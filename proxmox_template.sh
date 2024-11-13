@@ -1,4 +1,7 @@
-#!/usr/bin/env bash
+#!/usr/bin/bash
+
+apt update -y -q
+apt install libguestfs-tools -y -q
 
 CORES="${CORES:-1}"
 MEMORY="${MEMORY:-2048}"
