@@ -29,7 +29,13 @@ echo Memory "$MEMORY"
 echo Disk Size "$DISK_SIZE"
 echo Template ID "$TEMPLATE_ID"
 
-wget -O "$CLOUD_IMAGE_FILE" $CLOUD_IMAGE_URL
+wget -O "$CLOUD_IMAGE_FILE" "$CLOUD_IMAGE_URL"
+
+if [ ! -f "$CLOUD_IMAGE_FILE" ]; then
+  echo "No Distro Set" >&2
+  exit 1
+fi
+
 virt-customize -a "$CLOUD_IMAGE_FILE" --install qemu-guest-agent
 qm create "$TEMPLATE_ID" --name "$TEMPLATE_NAME" --cores "$CORES" --memory "$MEMORY" --net0 virtio,bridge=vmbr0
 qm importdisk "$TEMPLATE_ID" "$CLOUD_IMAGE_FILE" local-lvm
