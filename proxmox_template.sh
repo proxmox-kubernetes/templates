@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
 
-eval "$(apt update -y -q)"
-eval "$(apt install libguestfs-tools -y -q)"
-
-read -r -p "Image URL: " CLOUD_IMAGE_URL
-
 CORES="${CORES:-1}"
 MEMORY="${MEMORY:-2048}"
 DISK_SIZE="${DISK_SIZE:-16G}"
