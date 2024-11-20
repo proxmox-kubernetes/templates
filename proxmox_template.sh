@@ -33,9 +33,6 @@ echo Template Name "$TEMPLATE_NAME"
 wget -O "$CLOUD_IMAGE_FILE" "$CLOUD_IMAGE_URL"
 virt-customize -a "$CLOUD_IMAGE_FILE" --install qemu-guest-agent
 
-wget -O "/var/lib/vz/snippets/user-data.yml" https://raw.githubusercontent.com/Reggles44/proxmox-template/refs/heads/main/user-data.yml
-wget -O "/var/lib/vz/snippets/meta-data.yml" https://raw.githubusercontent.com/Reggles44/proxmox-template/refs/heads/main/meta-data.yml
-
 qm create "$TEMPLATE_ID" --name "$TEMPLATE_NAME" --cores "$CORES" --memory "$MEMORY" --net0 virtio,bridge=vmbr0
 qm importdisk "$TEMPLATE_ID" "$CLOUD_IMAGE_FILE" local-lvm
 qm set "$TEMPLATE_ID" --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-"$TEMPLATE_ID"-disk-0
