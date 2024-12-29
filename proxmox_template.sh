@@ -47,7 +47,7 @@ users:
 apt:
   sources:
     docker.list:
-      source: deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/debian "$(/etc/os-release && echo $VERSION_CODENAME)" stable.
+      source: deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/debian $RELEASE stable.
       keyid: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
       keyid: 8D81803C0EBFCD88
       keyserver: 'https://download.docker.com/linux/debian/gpg'
