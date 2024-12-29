@@ -40,9 +40,7 @@ cat <<EOF | tee /var/lib/vz/snippets/user-data.yaml
 users:
   - default
   - name: debian-12-cloud
-    passwd: "$6$rounds=4096$3YrnNMprl.lB4Gt9$CZuzVsa9nCwt50hMi.Xr72IKWo8Nodq0yCslm4T3KpnHdYjcN/EqzB5yNY5imEPgRkQ4PC3n/TIaeeAxiLVTU/"
-
-    passrd: ""
+    passwd: $6$rounds=4096$9L5WSrOX5xnefydm$0B5ID/erh6/g0W8omTfOPZX7aNWWDIDk8/p6PJBIF5P1/KPasCM2jR6NU97.DdOaa.SvTnbiXwA5KwlfQgnWa.
     lock-passwd: true
     ssh_pwauth: false
     sudo: ALL=(ALL) NOPASSWD:ALL
