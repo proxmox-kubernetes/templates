@@ -38,9 +38,13 @@ cat <<EOF | tee /var/lib/vz/snippets/user-data.yaml
 #cloud-config
 
 users:
+  - default
   - name: debian
-    passwd: "0ce00c6bde8a7e5d59cc6c3e170526c7f3d6c30986bb67bc9aab2834ceb3628a2d083f514c0364b5e43b87f4282e1b4cbd7a3f3728a0d2d9ba61666e7cf22ef5"
-    lock-passwd: false
+    passrd: "53ad2edfc7474c3122e601b9f23fca705eae85b405c7c52b9b53d400618a9bd4"
+    lock-passwd: true
+    ssh_pwauth: false
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin, docker
     chpasswd:
       expire: false
 
