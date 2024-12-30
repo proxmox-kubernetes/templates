@@ -5,7 +5,7 @@ DISTRO="${DISTRO:-debian}"
 CORES="${CORES:-1}"
 MEMORY="${MEMORY:-2048}"
 DISK_SIZE="${DISK_SIZE:-16G}"
-TEMPLATE_ID="${TEMPLATE_ID:-9001}"
+VMID="${TEMPLATE_ID:-9001}"
 CLOUD_INIT_USER_FILE="https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/user-data.yml"
 USER_DATA=/var/lib/vz/snippets/user-data.yaml
 
@@ -72,19 +72,32 @@ system_info:
 
 EOF
 
-# Build Template
-qm create "$TEMPLATE_ID" --name "$TEMPLATE_NAME" --cores "$CORES" --memory "$MEMORY" --net0 virtio,bridge=vmbr0
-qm importdisk "$TEMPLATE_ID" "$CLOUD_IMAGE_FILE" local-lvm
-qm set "$TEMPLATE_ID" --scsi0 local-lvm:debian-12-template-disk-0
-qm set "$TEMPLATE_ID" --ide2 local-lvm:cloudinit
-qm set "$TEMPLATE_ID" --boot order=scsi0
-qm set "$TEMPLATE_ID" --agent 1
-qm set "$TEMPLATE_ID" --machine q35
-qm set "$TEMPLATE_ID" --serial0 socket --vga serial0
-qm set "$TEMPLATE_ID" --ipconfig0 ip=dhcp
-qm set "$TEMPLATE_ID" --cicustom "user=local:snippets/user-data.yaml"
-qm resize "$TEMPLATE_ID" scsi0 "$DISK_SIZE"
-qm template "$TEMPLATE_ID"
+# Create VM
+qm create "$VMID" --name "$TEMPLATE_NAME"
+
+# Set Resources
+qm set "$VMID" --cores "$CORES"
+qm set "$VMID" --memory "$MEMORY"
+
+# Setup Networking
+qm set "$VMID" --net0 virtio,bridge=vmbr0
+qm set "$VMID" --ipconfig0 ip=dhcp
+
+# Configure Drives
+qm set "$VMID" --scsihw virtio-scsi-pci
+qm set "$VMID" --scsi0 local-lvm:debian-12-template-disk-0,import-from=$CLOUD_IMAGE_FILE
+qm set "$VMID" --ide2 local-lvm:cloudinit
+qm set "$VMID" --boot order=scsi0
+qm resize "$VMID" scsi0 "$DISK_SIZE"
+
+# Settings
+qm set "$VMID" --agent 1
+qm set "$VMID" --machine q35
+qm set "$VMID" --serial0 socket --vga serial0
+qm set "$VMID" --cicustom "user=local:snippets/user-data.yaml"
+
+# Make Template
+qm template "$VMID"
 
 # Clean up
 rm $CLOUD_IMAGE_FILE
