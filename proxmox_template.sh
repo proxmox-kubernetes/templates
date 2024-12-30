@@ -103,4 +103,4 @@ qm set "$VMID" --cicustom "user=local:snippets/user-data.yaml"
 qm template "$VMID"
 
 # Clean up
-rm $CLOUD_IMAGE_FILE
+# rm $CLOUD_IMAGE_FILE
