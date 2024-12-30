@@ -88,7 +88,8 @@ qm set "$VMID" --ipconfig0 ip=dhcp
 qm importdisk "$VMID" "$CLOUD_IMAGE_FILE" local-lvm
 # qm set "$VMID" --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-"$VMID"-disk-0
 qm set "$VMID" --scsihw virtio-scsi-pci
-qm set "$VMID" --scsi0 local-lvm:vm-"$VMID"-disk-0
+qm set "$VMID" --scsi0 local:0,import-from="$CLOUD_IMAGE_FILE",discard=on,ssd=1
+# qm set "$VMID" --scsi0 local-lvm:vm-"$VMID"-disk-0
 qm set "$VMID" --ide2 local-lvm:cloudinit
 qm set "$VMID" --boot order=scsi0
 qm resize "$VMID" scsi0 "$DISK_SIZE"
