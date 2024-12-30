@@ -85,8 +85,11 @@ qm set "$VMID" --net0 virtio,bridge=vmbr0
 qm set "$VMID" --ipconfig0 ip=dhcp
 
 # Configure Drives
-qm set "$VMID" --scsihw virtio-scsi-pci
-qm set "$VMID" --scsi0 virtio-scsi-pci --scsi0 local-lvm:debian-12-template-disk-0,import-from=$CLOUD_IMAGE_FILE
+qm importdisk "$TEMPLATE_ID" "$CLOUD_IMAGE_FILE" local-lvm
+qm set "$TEMPLATE_ID" --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-"$TEMPLATE_ID"-disk-0
+##
+## qm set "$VMID" --scsihw virtio-scsi-pci
+#qm set "$VMID" --scsi0 virtio-scsi-pci --scsi0 local-lvm:debian-12-template-disk-0,import-from=$CLOUD_IMAGE_FILE
 qm set "$VMID" --ide2 local-lvm:cloudinit
 qm set "$VMID" --boot order=scsi0
 qm resize "$VMID" scsi0 "$DISK_SIZE"
