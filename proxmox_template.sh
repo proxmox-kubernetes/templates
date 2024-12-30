@@ -35,7 +35,7 @@ cat <<EOF | tee "$USER_DATA"
 #cloud init user data
 users:
   - default
-  - name: debian-12-cloud
+  - name: debian
     passwd: $6$rounds=4096$9L5WSrOX5xnefydm$0B5ID/erh6/g0W8omTfOPZX7aNWWDIDk8/p6PJBIF5P1/KPasCM2jR6NU97.DdOaa.SvTnbiXwA5KwlfQgnWa.
     lock-passwd: true
     ssh_pwauth: false
@@ -75,9 +75,9 @@ EOF
 # Build Template
 qm create "$TEMPLATE_ID" --name "$TEMPLATE_NAME" --cores "$CORES" --memory "$MEMORY" --net0 virtio,bridge=vmbr0
 qm importdisk "$TEMPLATE_ID" "$CLOUD_IMAGE_FILE" local-lvm
-qm set "$TEMPLATE_ID" --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-"$TEMPLATE_ID"-disk-0
-qm set "$TEMPLATE_ID" --boot c --bootdisk scsi0
+qm set "$TEMPLATE_ID" --scsihw virtio-scsi-pci --scsi0 local-lvm:debian-12-template-disk-0
 qm set "$TEMPLATE_ID" --ide2 local-lvm:cloudinit
+qm set "$TEMPLATE_ID" --boot order=scsi0
 qm set "$TEMPLATE_ID" --agent 1
 qm set "$TEMPLATE_ID" --machine q35
 qm set "$TEMPLATE_ID" --serial0 socket --vga serial0
