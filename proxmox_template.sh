@@ -73,6 +73,7 @@ system_info:
 EOF
 
 # Create VM
+qm destroy "$VMID"
 qm create "$VMID" --name "$TEMPLATE_NAME"
 
 # Set Resources
