@@ -5,7 +5,7 @@ DISTRO="${DISTRO:-debian}"
 CORES="${CORES:-1}"
 MEMORY="${MEMORY:-2048}"
 DISK_SIZE="${DISK_SIZE:-16G}"
-VMID="${TEMPLATE_ID:-9001}"
+VMID="${VMID:-9001}"
 CLOUD_INIT_USER_FILE="https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/user-data.yml"
 USER_DATA=/var/lib/vz/snippets/user-data.yaml
 
@@ -85,8 +85,8 @@ qm set "$VMID" --net0 virtio,bridge=vmbr0
 qm set "$VMID" --ipconfig0 ip=dhcp
 
 # Configure Drives
-qm importdisk "$TEMPLATE_ID" "$CLOUD_IMAGE_FILE" local-lvm
-qm set "$TEMPLATE_ID" --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-"$TEMPLATE_ID"-disk-0
+qm importdisk "$VMID" "$CLOUD_IMAGE_FILE" local-lvm
+qm set "$VMID" --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-"$VMID"-disk-0
 ##
 ## qm set "$VMID" --scsihw virtio-scsi-pci
 #qm set "$VMID" --scsi0 virtio-scsi-pci --scsi0 local-lvm:debian-12-template-disk-0,import-from=$CLOUD_IMAGE_FILE
