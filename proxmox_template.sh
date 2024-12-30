@@ -32,9 +32,8 @@ virt-customize -a "$CLOUD_IMAGE_FILE" --install qemu-guest-agent
 # Setup user-data.yaml
 rm -f "$USER_DATA"
 cat <<EOF | tee "$USER_DATA"
-#cloud init user data
+#cloud-config
 users:
-  - default
   - name: debian
     passwd: $6$rounds=4096$9L5WSrOX5xnefydm$0B5ID/erh6/g0W8omTfOPZX7aNWWDIDk8/p6PJBIF5P1/KPasCM2jR6NU97.DdOaa.SvTnbiXwA5KwlfQgnWa.
     lock-passwd: true
