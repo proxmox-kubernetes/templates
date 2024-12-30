@@ -75,7 +75,7 @@ EOF
 # Build Template
 qm create "$TEMPLATE_ID" --name "$TEMPLATE_NAME" --cores "$CORES" --memory "$MEMORY" --net0 virtio,bridge=vmbr0
 qm importdisk "$TEMPLATE_ID" "$CLOUD_IMAGE_FILE" local-lvm
-qm set "$TEMPLATE_ID" --scsi0 virtio-scsi-pci --scsi0 local-lvm:debian-12-template-disk-0
+qm set "$TEMPLATE_ID" --scsi0 local-lvm:debian-12-template-disk-0
 qm set "$TEMPLATE_ID" --ide2 local-lvm:cloudinit
 qm set "$TEMPLATE_ID" --boot order=scsi0
 qm set "$TEMPLATE_ID" --agent 1
