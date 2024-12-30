@@ -2,21 +2,15 @@
 
 
 DISTRO="${DISTRO:-debian}"
-CORES="${CORES:-1}"
-MEMORY="${MEMORY:-2048}"
-DISK_SIZE="${DISK_SIZE:-16G}"
-VMID="${VMID:-9001}"
-CLOUD_INIT_USER_FILE="https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/user-data.yml"
-USER_DATA=/var/lib/vz/snippets/user-data.yaml
-
 case $DISTRO in
 debian)
   CLOUD_IMAGE_URL="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
   CLOUD_IMAGE_FILE="/tmp/debian-12-generic-amd64.qcow2"
   TEMPLATE_NAME="debian-12-cloud"
+  VMID=9001
   ;;
 *)
-  echo "No Distro Set" >&2
+  echo "No Distro Picked" >&2
   exit 1
   ;;
 esac
@@ -30,6 +24,7 @@ wget -O "$CLOUD_IMAGE_FILE" "$CLOUD_IMAGE_URL"
 virt-customize -a "$CLOUD_IMAGE_FILE" --install qemu-guest-agent
 
 # Setup user-data.yaml
+USER_DATA=/var/lib/vz/snippets/user-data.yml
 rm -f "$USER_DATA"
 cat <<EOF | tee "$USER_DATA"
 #cloud-config
@@ -76,19 +71,16 @@ qm destroy "$VMID"
 qm create "$VMID" --name "$TEMPLATE_NAME"
 
 # Set Resources
-qm set "$VMID" --cores "$CORES"
-qm set "$VMID" --memory "$MEMORY"
+qm set "$VMID" --cores 1
+qm set "$VMID" --memory 2048
 
 # Setup Networking
 qm set "$VMID" --net0 virtio,bridge=vmbr0
 qm set "$VMID" --ipconfig0 ip=dhcp
 
 # Configure Drives
-# qm importdisk "$VMID" "$CLOUD_IMAGE_FILE" local-lvm
-# qm set "$VMID" --scsihw virtio-scsi-pci --scsi0 local-lvm:vm-"$VMID"-disk-0
 qm set "$VMID" --scsihw virtio-scsi-pci
 qm set "$VMID" --scsi0 local-lvm:0,import-from="$CLOUD_IMAGE_FILE",discard=on,ssd=1
-# qm set "$VMID" --scsi0 local-lvm:vm-"$VMID"-disk-0
 qm set "$VMID" --ide2 local-lvm:cloudinit
 qm set "$VMID" --boot order=scsi0
 qm resize "$VMID" scsi0 "$DISK_SIZE"
@@ -97,7 +89,7 @@ qm resize "$VMID" scsi0 "$DISK_SIZE"
 qm set "$VMID" --agent 1
 qm set "$VMID" --machine q35
 qm set "$VMID" --serial0 socket --vga serial0
-qm set "$VMID" --cicustom "user=local:snippets/user-data.yaml"
+qm set "$VMID" --cicustom "user=local:snippets/user-data.yml"
 
 # Make Template
 qm template "$VMID"
