@@ -1,0 +1,37 @@
+#cloud-config
+users:
+  - name: debian
+    passwd: $6$rounds=4096$9L5WSrOX5xnefydm$0B5ID/erh6/g0W8omTfOPZX7aNWWDIDk8/p6PJBIF5P1/KPasCM2jR6NU97.DdOaa.SvTnbiXwA5KwlfQgnWa.
+    lock-passwd: true
+    ssh_pwauth: false
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin, docker
+    chpasswd:
+      expire: false
+
+apt:
+  sources:
+    docker.list:
+      source: deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable.
+      keyid: 8D81803C0EBFCD88
+      keyserver: 'https://download.docker.com/linux/debian/gpg'
+
+packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gnupg-agent
+  - software-properties-common
+  - docker-ce
+  - docker-ce-cli
+  - containerd.io
+
+# create the docker group
+groups:
+  - docker
+
+# Add default auto created user to docker group
+system_info:
+  default_user:
+    groups: [docker]
+
