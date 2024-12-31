@@ -8,13 +8,14 @@ users:
     lock_passwd: false
     sudo: ALL=(ALL) NOPASSWD:ALL
     groups: users, admin, docker
+    ssh_authorized_keys:
+      - ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCcW2jYunchm6gB8eKgYzWnvgLKive8JdQCxj6RyikjugXOgBhgG0os3gxX1Nl0Jyv7evPmbiAxbZReqtZGH0ercdTs12r5mJ7ajVqtELZr7RHW4iBQ5w8CgLIbea8DeO2rGVr0pSMCLTsoecvAwIbIqeDGDF+jpw6CRzRpkyx9oiJ26ww1hAoFL4F/+S0HHOqzCMzac3JvfbRvypcYNgOo5IwT4vxbeoiNUFAS1K7jOQVURsd30TN+NYrdW1IWdeylKS/vBoLtJkWIyJIJvfA24DAHgREb57cFxzTpVmSApKIavJ14YNGSaJf3RywnwB7YWMh6uC4zjVBBsvQseFxLzf89hyn3gtruPBla0vwu3gRRvkrmg2qza0r2GjUU5fRw0OEc7tDW7K8sqq9obKLGeJgNVBLS2cGmxVzgx16k14zX2eT+ApUavJt6hiFUJbeMxYynvCqMXMX5U4FLS+DpogKDF+NS1M6uJEm4Ko4ZDQJ2k1ilNDvSaIHYRIaj7w2PEaCk+1Y0zin1r4mjD+3k0YRtUL0cISFxYLTIHHeMZk1W/QkvMDv9evmlNNW4k1UnGaxyLoStesJaU49gFguLrOHBxT1f1IFq2Go7qTauCd9vtsDQPeCSVpJx2NoCHL1dKfphF8LElY0ogYdXe4JjpL0eWCgiNVKyWSS6GsAVlQ== r@r-XPS-13-9300
 
 apt:
   sources:
     docker.list:
-      source: deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable.
-      keyid: 8D81803C0EBFCD88
-      keyserver: 'https://download.docker.com/linux/debian/gpg'
+      source: deb [arch=amd64] https://download.docker.com/linux/debian $(. /etc/os-release && echo "$VERSION_CODENAME") stable
+      keyserver: https://download.docker.com/linux/debian/gpg
 
 packages:
   - apt-transport-https
