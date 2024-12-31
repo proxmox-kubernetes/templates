@@ -8,6 +8,7 @@ debian)
   CLOUD_IMAGE_FILE="/tmp/debian-12-generic-amd64.qcow2"
   TEMPLATE_NAME="debian-12-cloud"
   VMID=9001
+  TVMID=901
   ;;
 *)
   echo "No Distro Picked" >&2
@@ -63,3 +64,9 @@ qm template "$VMID"
 
 # Clean up
 rm $CLOUD_IMAGE_FILE
+
+# Replace Test VM
+qm stop "$TVMID"
+qm destroy "$TVMID"
+qm clone "$VMID" "$TVMID" --name "$TEMPLATE_NAME"-test --full true
+
