@@ -41,7 +41,7 @@ qm set "$VMID" --scsihw virtio-scsi-pci
 qm set "$VMID" --scsi0 local-lvm:0,import-from="$CLOUD_IMAGE_FILE",discard=on,ssd=1
 qm set "$VMID" --ide2 local-lvm:cloudinit
 qm set "$VMID" --boot order=scsi0
-qm resize "$VMID" scsi0 "$DISK_SIZE"
+qm resize "$VMID" scsi0 16G
 
 # Settings
 qm set "$VMID" --agent 1
