@@ -41,7 +41,6 @@ qm set "$VMID" --scsihw virtio-scsi-pci
 qm set "$VMID" --scsi0 local-lvm:0,import-from="$CLOUD_IMAGE_FILE",discard=on,ssd=1
 qm set "$VMID" --ide2 local-lvm:cloudinit
 qm set "$VMID" --boot order=scsi0
-qm resize "$VMID" scsi0 16G
 
 # Settings
 qm set "$VMID" --agent 1
@@ -51,13 +50,11 @@ qm set "$VMID" --serial0 socket --vga serial0
 # Setup Cloud Init Configs
 SNIPPETS=/var/lib/vz/snippets
 rm "$SNIPPETS"/user-config.yml
-# wget -O "$SNIPPETS"/user-config.yml https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/user-config.yml
+wget -O "$SNIPPETS"/user-config.yml https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/user-config.yml
 # wget -O "$SNIPPETS"/meta-config.yml https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/meta-config.yml
 # wget -O "$SNIPPETS"/network-config.yml https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/network-config.yml
 # qm set "$VMID" --cicustom "user=local:snippets/user-config.yml,meta=local:snippets/meta-config.yml,network=local:snippets/network-config.yml"
 qm set "$VMID" --cicustom "user=local:snippets/user-config.yml"
-
-
 
 # Make Template
 qm template "$VMID"
@@ -69,4 +66,5 @@ rm $CLOUD_IMAGE_FILE
 qm stop "$TVMID"
 qm destroy "$TVMID"
 qm clone "$VMID" "$TVMID" --name "$TEMPLATE_NAME"-test --full true
+
 
