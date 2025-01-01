@@ -8,8 +8,8 @@ function create {
   NAME=$1
   IMAGE_URL=$2
 
-  curl --create-dirs -O --output-dir /tmp/images $IMAGE_URL
-  curl --create-dirs -O --output-dir $SNIPPETS $GITHUB_BASE/
+  curl --create-dirs -O --output-dir /tmp/images "$IMAGE_URL"
+  curl --create-dirs -O --output-dir "$SNIPPETS" "$GITHUB_BASE/$NAME"
 
   virt-customize -a "/tmp/images/$(basename $IMAGE_URL)" --install qemu-guest-agent
 
@@ -40,10 +40,12 @@ TEMPLATES=(
 )
 
 IFS=','; for i in $TEMPLATES; do set -- $i;
+  echo $1 $2
   case $1 in
   debian)
-    create $2 "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
+    url="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
     ;;
   esac
+  create $2 $url
 done
 
