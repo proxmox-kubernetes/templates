@@ -35,12 +35,15 @@ apt update -y -q
 apt install libguestfs-tools curl -y -q
 
 TEMPLATES=(
-  "debian,debian"
-  "debian,debian-kubernetes"
+  "debian debian"
+  "debian debian-kubernetes"
 )
 
-IFS=','; for i in $TEMPLATES; do set -- $i;
-  echo $1 
+for i in $TEMPLATES;
+do
+  echo $i
+  set -- $i
+  echo $1
   echo $2
 
   case $1 in
