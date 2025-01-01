@@ -1,70 +1,49 @@
-#!/usr/bin/bash
+#!/usr/bin/env bash
+
+SNIPPETS=/var/lib/vz/snippets
+GITHUB_BASE=https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/
 
 
-DISTRO="${DISTRO:-debian}"
-case $DISTRO in
-debian)
-  CLOUD_IMAGE_URL="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
-  CLOUD_IMAGE_FILE="/tmp/debian-12-generic-amd64.qcow2"
-  TEMPLATE_NAME="debian-12-cloud"
-  VMID=9001
-  TVMID=901
-  ;;
-*)
-  echo "No Distro Picked" >&2
-  exit 1
-  ;;
-esac
+function create {
+  NAME=$1
+  IMAGE_URL=$2
+
+  curl --create-dirs -O --output-dir /tmp/images $IMAGE_URL
+  curl --create-dirs -O --output-dir $SNIPPETS $GITHUB_BASE/
+
+  virt-customize -a "/tmp/images/$(basename $IMAGE_URL)" --install qemu-guest-agent
+
+  qm destroy "$VMID"
+  qm create "$VMID" --name "$NAME"
+  qm set "$VMID" --cores 1
+  qm set "$VMID" --memory 2048
+  qm set "$VMID" --net0 virtio,bridge=vmbr0
+  qm set "$VMID" --ipconfig0 ip=dhcp
+  qm set "$VMID" --scsihw virtio-scsi-pci
+  qm set "$VMID" --scsi0 local-lvm:0,import-from="$CLOUD_IMAGE_FILE",discard=on,ssd=1
+  qm set "$VMID" --ide2 local-lvm:cloudinit
+  qm set "$VMID" --boot order=scsi0
+  qm set "$VMID" --agent 1
+  qm set "$VMID" --machine q35
+  qm set "$VMID" --serial0 socket --vga serial0
+  qm set "$VMID" --cicustom "user=local:snippets/$USER_DATA"
+  qm template "$VMID"
+}
 
 # Update Packages
 apt update -y -q
-apt install libguestfs-tools -y -q
+apt install libguestfs-tools curl -y -q
 
-# Download Cloud Image and Install qemu-guest-agent
-wget -O "$CLOUD_IMAGE_FILE" "$CLOUD_IMAGE_URL"
-virt-customize -a "$CLOUD_IMAGE_FILE" --install qemu-guest-agent
+TEMPLATES=(
+  "debian,debian"
+  "debian,debian-kubernetes"
+)
 
-# Create VM
-qm destroy "$VMID"
-qm create "$VMID" --name "$TEMPLATE_NAME"
-
-# Set Resources
-qm set "$VMID" --cores 1
-qm set "$VMID" --memory 2048
-
-# Setup Networking
-qm set "$VMID" --net0 virtio,bridge=vmbr0
-qm set "$VMID" --ipconfig0 ip=dhcp
-
-# Configure Drives
-qm set "$VMID" --scsihw virtio-scsi-pci
-qm set "$VMID" --scsi0 local-lvm:0,import-from="$CLOUD_IMAGE_FILE",discard=on,ssd=1
-qm set "$VMID" --ide2 local-lvm:cloudinit
-qm set "$VMID" --boot order=scsi0
-
-# Settings
-qm set "$VMID" --agent 1
-qm set "$VMID" --machine q35
-qm set "$VMID" --serial0 socket --vga serial0
-
-# Setup Cloud Init Configs
-SNIPPETS=/var/lib/vz/snippets
-rm "$SNIPPETS"/user-config.yml
-wget -O "$SNIPPETS"/user-config.yml https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/user-config.yml
-# wget -O "$SNIPPETS"/meta-config.yml https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/meta-config.yml
-# wget -O "$SNIPPETS"/network-config.yml https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/network-config.yml
-# qm set "$VMID" --cicustom "user=local:snippets/user-config.yml,meta=local:snippets/meta-config.yml,network=local:snippets/network-config.yml"
-qm set "$VMID" --cicustom "user=local:snippets/user-config.yml"
-
-# Make Template
-qm template "$VMID"
-
-# Clean up
-rm $CLOUD_IMAGE_FILE
-
-# Replace Test VM
-qm stop "$TVMID"
-qm destroy "$TVMID"
-qm clone "$VMID" "$TVMID" --name "$TEMPLATE_NAME"-test --full true
-
+IFS=','; for distro, name in $TEMPLATES; do set -- $i;
+  case $distro in
+  debian)
+    create $name "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
+    ;;
+  esac
+done
 
