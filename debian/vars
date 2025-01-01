@@ -1,0 +1,3 @@
+CLOUD_IMAGE_URL="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
+CLOUD_IMAGE_FILE="/tmp/debian-12-generic-amd64.qcow2"
+
