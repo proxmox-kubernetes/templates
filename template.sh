@@ -39,10 +39,10 @@ TEMPLATES=(
   "debian,debian-kubernetes"
 )
 
-IFS=','; for distro, name in $TEMPLATES; do set -- $i;
-  case $distro in
+IFS=','; for i in $TEMPLATES; do set -- $i;
+  case $1 in
   debian)
-    create $name "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
+    create $2 "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
     ;;
   esac
 done
