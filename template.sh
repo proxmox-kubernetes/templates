@@ -31,8 +31,8 @@ function create {
 }
 
 # Update Packages
-apt update -y -q
-apt install libguestfs-tools curl -y -q
+apt update -y -q &> /dev/null
+apt install libguestfs-tools curl -y -q &> /dev/null
 
 TEMPLATES=(
   "debian debian"
@@ -45,6 +45,7 @@ declare -A urls=(
 
 for i in "${TEMPLATES[@]}"; do
   set -- $i
-  create $2 ${urls[$1]}
+  echo $1 $2 ${urls[$1]}
+  create $2 ${urls[$1]} &> /dev/null
 done
 
