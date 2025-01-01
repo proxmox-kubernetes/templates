@@ -8,6 +8,9 @@ function create {
   NAME=$1
   IMAGE_URL=$2
 
+  echo "Name: $NAME"
+  echo "URL: $IMAGE_URL"
+
   curl --create-dirs -O --output-dir /tmp/images "$IMAGE_URL"
   curl --create-dirs -O --output-dir "$SNIPPETS" "$GITHUB_BASE/$NAME"
 
@@ -45,7 +48,6 @@ declare -A urls=(
 
 for i in "${TEMPLATES[@]}"; do
   set -- $i
-  echo $1 $2 ${urls[$1]}
   create $2 ${urls[$1]} &> /dev/null
 done
 
