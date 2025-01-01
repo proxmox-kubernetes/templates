@@ -2,7 +2,7 @@
 
 #### Create Templates
 ```
-curl https://raw.githubusercontent.com/Reggles44/proxmox-template/refs/heads/main/template.sh | bash
+curl -fsSL https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/template.sh | bash
 ```
 
 #### Templates Created

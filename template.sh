@@ -48,6 +48,6 @@ declare -A urls=(
 
 for i in "${TEMPLATES[@]}"; do
   set -- $i
-  create $2 ${urls[$1]} &> /dev/null
+  create $2 ${urls[$1]}
 done
 
