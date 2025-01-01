@@ -40,7 +40,8 @@ TEMPLATES=(
 )
 
 IFS=','; for i in $TEMPLATES; do set -- $i;
-  echo $1 $2
+  echo $1 
+  echo $2
 
   case $1 in
   debian)
