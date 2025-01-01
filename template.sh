@@ -41,11 +41,16 @@ TEMPLATES=(
 
 IFS=','; for i in $TEMPLATES; do set -- $i;
   echo $1 $2
+
   case $1 in
   debian)
     url="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
     ;;
+  *)
+    exit 1
+    ;;
   esac
+
   create $2 $url
 done
 
