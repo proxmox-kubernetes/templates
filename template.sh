@@ -52,7 +52,7 @@ TEMPLATES=(
 
 declare -A urls=(
   [debian]="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
-  [ubuntu]="http://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
+  [ubuntu]="https://cloud-images.ubuntu.com/oracular/current/oracular-server-cloudimg-amd64.img"
 )
 
 rm -rf "$SNIPPETS" 
