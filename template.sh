@@ -7,9 +7,7 @@ GITHUB_BASE=https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-templat
 function create {
   NAME=$1
   IMAGE_URL=$2
-
   IMAGE_FILE="/tmp/images/$(basename $IMAGE_URL)"
-  INIT_FILE="$SNIPPETS/$NAME"
 
   echo "ID: $VMID"
   echo "Name: $NAME"
@@ -20,7 +18,7 @@ function create {
     virt-customize -a "$IMAGE_FILE" --install qemu-guest-agent
   fi
 
-  curl -#fs -o $INIT_FILE -L "$GITHUB_BASE/$NAME"
+  curl -#fs -o "$SNIPPETS/$NAME.yml" -L "$GITHUB_BASE/$NAME.yml"
 
   qm destroy "$VMID"
   qm create "$VMID" --name "$NAME"
@@ -35,7 +33,7 @@ function create {
   qm set "$VMID" --agent 1
   qm set "$VMID" --machine q35
   qm set "$VMID" --serial0 socket --vga serial0
-  qm set "$VMID" --cicustom "user=local:snippets/$USER_DATA"
+  qm set "$VMID" --cicustom "user=local:snippets/$NAME.yml"
   qm template "$VMID"
 }
 
