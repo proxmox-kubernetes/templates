@@ -12,8 +12,8 @@ function create {
   echo "Name: $NAME"
   echo "URL: $IMAGE_URL"
 
-  curl --create-dirs -OL --output-dir /tmp/images "$IMAGE_URL"
-  curl --create-dirs -OL --output-dir "$SNIPPETS" "$GITHUB_BASE/$NAME"
+  curl --progress-bar --create-dirs -OL --output-dir /tmp/images "$IMAGE_URL"
+  curl --progress-bar --create-dirs -OL --output-dir "$SNIPPETS" "$GITHUB_BASE/$NAME"
 
   virt-customize -a "/tmp/images/$(basename $IMAGE_URL)" --install qemu-guest-agent
 
