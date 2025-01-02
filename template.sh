@@ -5,21 +5,14 @@ SNIPPETS=/var/lib/vz/snippets/
 GITHUB_BASE=https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/
 
 function create {
-  DISTRO=$1
-  NAME=$2
-  IMAGE_URL=$3
+  NAME=$1
+  IMAGE_URL=$2
   IMAGE_FILE="/tmp/images/$(basename $IMAGE_URL)"
 
-  echo "ID: $VMID"
-  echo "Name: $NAME"
-  echo "URL: $IMAGE_URL"
+  curl -s -o "$IMAGE_FILE" -L "$IMAGE_URL"
+  virt-customize -a "$IMAGE_FILE" --install qemu-guest-agent
 
-  if [ ! -f "$IMAGE_FILE" ]; then
-    curl -s -o "$IMAGE_FILE" -L "$IMAGE_URL"
-    virt-customize -a "$IMAGE_FILE" --install qemu-guest-agent
-  fi
-
-  curl -s -o "$SNIPPETS/$NAME.yml" -L "$GITHUB_BASE/$DISTRO/$NAME.yml"
+  curl -s -o "$SNIPPETS/$NAME.yml" -L "$GITHUB_BASE/cloud-init/$NAME.yml"
 
   qm destroy "$VMID"
   qm create "$VMID" --name "$NAME"
@@ -38,28 +31,13 @@ function create {
   qm template "$VMID"
 }
 
-# Update Packages
-apt update -y -q &> /dev/null
-apt install libguestfs-tools curl -y -q &> /dev/null
-
-TEMPLATES=(
-  "debian debian"
-  "debian debian-kubernetes"
-  "ubuntu ubuntu"
-  "ubuntu ubuntu-kubernetes"
+declare -A TEMPLATES=(
+  [debian]=https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2
+  [ubuntu]=https://cloud-images.ubuntu.com/oracular/current/oracular-server-cloudimg-amd64.img
 )
 
-declare -A urls=(
-  [debian]="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
-  [ubuntu]="https://cloud-images.ubuntu.com/oracular/current/oracular-server-cloudimg-amd64.img"
-)
-
-rm -rf "$SNIPPETS" 
-mkdir "$SNIPPETS"
-
-for i in "${TEMPLATES[@]}"; do
-  set -- $i
+for NAME in "${!TEMPLATES[@]}"; do
   ((VMID++))
-  create $1 $2 ${urls[$1]}
+  create $NAME ${urls[$NAME]}
 done
 
