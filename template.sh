@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 VMID=9000
-SNIPPETS=/var/lib/vz/snippets
+SNIPPETS=/var/lib/vz/snippets/images
 GITHUB_BASE=https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/
 
 function create {
@@ -14,7 +14,6 @@ function create {
   echo "ID: $VMID"
   echo "Name: $NAME"
   echo "URL: $IMAGE_URL"
-
 
   if [ ! -f $IMAGE_FILE]; then
     curl -#fsoL "$IMAGE_FILE" "$IMAGE_URL"
@@ -53,6 +52,9 @@ TEMPLATES=(
 declare -A urls=(
   [debian]="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
 )
+
+rm -rf "$SNIPPETS" 
+mkdir "$SNIPPETS"
 
 for i in "${TEMPLATES[@]}"; do
   set -- $i
