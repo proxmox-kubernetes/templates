@@ -15,13 +15,13 @@ function create {
   echo "Name: $NAME"
   echo "URL: $IMAGE_URL"
 
-  if [ ! -f $IMAGE_FILE]; then
+  if [ ! -f "$IMAGE_FILE" ]; then
     curl -#fsoL "$IMAGE_FILE" "$IMAGE_URL"
   fi
 
   curl -#fsoL $ "$GITHUB_BASE/$NAME"
 
-  virt-customize -a "/tmp/images/$(basename $IMAGE_URL)" --install qemu-guest-agent
+  virt-customize -a "$IMAGE_FILE" --install qemu-guest-agent
 
   qm destroy "$VMID"
   qm create "$VMID" --name "$NAME"
@@ -30,7 +30,7 @@ function create {
   qm set "$VMID" --net0 virtio,bridge=vmbr0
   qm set "$VMID" --ipconfig0 ip=dhcp
   qm set "$VMID" --scsihw virtio-scsi-pci
-  qm set "$VMID" --scsi0 local-lvm:0,import-from="$CLOUD_IMAGE_FILE",discard=on,ssd=1
+  qm set "$VMID" --scsi0 local-lvm:0,import-from="$IMAGE_FILE",discard=on,ssd=1
   qm set "$VMID" --ide2 local-lvm:cloudinit
   qm set "$VMID" --boot order=scsi0
   qm set "$VMID" --agent 1
