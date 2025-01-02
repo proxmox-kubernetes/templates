@@ -9,10 +9,10 @@ function create {
   IMAGE_URL=$2
   IMAGE_FILE="/tmp/images/$(basename $IMAGE_URL)"
 
-  curl -s -o "$IMAGE_FILE" -L "$IMAGE_URL"
+  curl -o "$IMAGE_FILE" -L "$IMAGE_URL"
   virt-customize -a "$IMAGE_FILE" --install qemu-guest-agent
 
-  curl -s -o "$SNIPPETS/$NAME.yml" -L "$GITHUB_BASE/cloud-init/$NAME.yml"
+  curl -o "$SNIPPETS/$NAME.yml" -L "$GITHUB_BASE/cloud-init/$NAME.yml"
 
   qm destroy "$VMID"
   qm create "$VMID" --name "$NAME"
