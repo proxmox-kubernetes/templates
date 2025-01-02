@@ -31,13 +31,14 @@ function create {
   qm template "$VMID"
 }
 
-declare -A TEMPLATES=(
-  [debian]=https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2
-  [ubuntu]=https://cloud-images.ubuntu.com/oracular/current/oracular-server-cloudimg-amd64.img
+TEMPLATES=(
+  "debian https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
+  "ubuntu https://cloud-images.ubuntu.com/oracular/current/oracular-server-cloudimg-amd64.img"
 )
 
-for NAME in "${!TEMPLATES[@]}"; do
+for i in $TEMPLATES; do
+  set -- $i
   ((VMID++))
-  create $NAME ${TEMPLATES[$NAME]}
+  create $1 $2
 done
 
