@@ -2,7 +2,7 @@
 
 VMID=9000
 SNIPPETS=/var/lib/vz/snippets/
-GITHUB_BASE=https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/
+GITHUB_BASE=https://raw.githubusercontent.com/proxmox-kubernetes/templates/refs/heads/main/
 
 function create {
   NAME=$1
