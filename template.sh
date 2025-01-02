@@ -5,8 +5,9 @@ SNIPPETS=/var/lib/vz/snippets/
 GITHUB_BASE=https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/
 
 function create {
-  NAME=$1
-  IMAGE_URL=$2
+  DISTRO=$1
+  NAME=$2
+  IMAGE_URL=$3
   IMAGE_FILE="/tmp/images/$(basename $IMAGE_URL)"
 
   echo "ID: $VMID"
@@ -14,11 +15,11 @@ function create {
   echo "URL: $IMAGE_URL"
 
   if [ ! -f "$IMAGE_FILE" ]; then
-    curl -#fs -o "$IMAGE_FILE" -L "$IMAGE_URL"
+    curl -s -o "$IMAGE_FILE" -L "$IMAGE_URL"
     virt-customize -a "$IMAGE_FILE" --install qemu-guest-agent
   fi
 
-  curl -#fs -o "$SNIPPETS/$NAME.yml" -L "$GITHUB_BASE/$NAME.yml"
+  curl -s -o "$SNIPPETS/$NAME.yml" -L "$GITHUB_BASE/$DISTRO/$NAME.yml"
 
   qm destroy "$VMID"
   qm create "$VMID" --name "$NAME"
@@ -59,6 +60,6 @@ mkdir "$SNIPPETS"
 for i in "${TEMPLATES[@]}"; do
   set -- $i
   ((VMID++))
-  create $2 ${urls[$1]}
+  create $1 $2 ${urls[$1]}
 done
 
