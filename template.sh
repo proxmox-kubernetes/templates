@@ -38,6 +38,6 @@ declare -A TEMPLATES=(
 
 for NAME in "${!TEMPLATES[@]}"; do
   ((VMID++))
-  create $NAME ${urls[$NAME]}
+  create $NAME ${TEMPLATES[$NAME]}
 done
 
