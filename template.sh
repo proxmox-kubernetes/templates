@@ -16,11 +16,11 @@ function create {
   echo "URL: $IMAGE_URL"
 
   if [ ! -f "$IMAGE_FILE" ]; then
-    curl -#fsoL "$IMAGE_FILE" "$IMAGE_URL"
+    curl -#fs -o "$IMAGE_FILE" -L "$IMAGE_URL"
     virt-customize -a "$IMAGE_FILE" --install qemu-guest-agent
   fi
 
-  curl -#fsoL $ "$GITHUB_BASE/$NAME"
+  curl -#fs -o $INIT_FILE -L "$GITHUB_BASE/$NAME"
 
   qm destroy "$VMID"
   qm create "$VMID" --name "$NAME"
