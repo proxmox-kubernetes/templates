@@ -39,7 +39,7 @@ TEMPLATES=(
   "ubuntu https://cloud-images.ubuntu.com/oracular/current/oracular-server-cloudimg-amd64.img"
 )
 
-for i in $TEMPLATES; do
+for i in "${TEMPLATES[@]}"; do
   set -- $i
   ((VMID++))
   create $1 $2
