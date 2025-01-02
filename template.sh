@@ -8,6 +8,7 @@ function create {
   NAME=$1
   IMAGE_URL=$2
 
+  echo "ID: $VMID"
   echo "Name: $NAME"
   echo "URL: $IMAGE_URL"
 
