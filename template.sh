@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-VMID=9001
+VMID=9000
 SNIPPETS=/var/lib/vz/snippets
 GITHUB_BASE=https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/
 
@@ -8,12 +8,19 @@ function create {
   NAME=$1
   IMAGE_URL=$2
 
+  IMAGE_FILE="/tmp/images/$(basename $IMAGE_URL)"
+  INIT_FILE="$SNIPPETS/$NAME"
+
   echo "ID: $VMID"
   echo "Name: $NAME"
   echo "URL: $IMAGE_URL"
 
-  curl --progress-bar --create-dirs -OL --output-dir /tmp/images "$IMAGE_URL"
-  curl --progress-bar --create-dirs -OL --output-dir "$SNIPPETS" "$GITHUB_BASE/$NAME"
+
+  if [ ! -f $IMAGE_FILE]; then
+    curl -#fsoL "$IMAGE_FILE" "$IMAGE_URL"
+  fi
+
+  curl -#fsoL $ "$GITHUB_BASE/$NAME"
 
   virt-customize -a "/tmp/images/$(basename $IMAGE_URL)" --install qemu-guest-agent
 
