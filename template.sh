@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
+VMID=9001
 SNIPPETS=/var/lib/vz/snippets
 GITHUB_BASE=https://raw.githubusercontent.com/proxmox-kubernetes/proxmox-template/refs/heads/main/
-
 
 function create {
   NAME=$1
@@ -48,6 +48,7 @@ declare -A urls=(
 
 for i in "${TEMPLATES[@]}"; do
   set -- $i
+  ((VMID++))
   create $2 ${urls[$1]}
 done
 
