@@ -47,10 +47,13 @@ apt install libguestfs-tools curl -y -q &> /dev/null
 TEMPLATES=(
   "debian debian"
   "debian debian-kubernetes"
+  "ubuntu ubuntu"
+  "ubuntu ubuntu-kubernetes"
 )
 
 declare -A urls=(
   [debian]="https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-generic-amd64.qcow2"
+  [ubuntu]="http://cloud-images.ubuntu.com/noble/current/noble-server-cloudimg-amd64.img"
 )
 
 rm -rf "$SNIPPETS" 
