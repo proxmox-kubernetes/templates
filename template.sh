@@ -12,6 +12,7 @@ function create {
   echo "Name: $NAME"
   echo "URL: $IMAGE_URL"
 
+  mkdir p "/tmp/images"
   curl -o "$IMAGE_FILE" -L "$IMAGE_URL"
   virt-customize -a "$IMAGE_FILE" --install qemu-guest-agent
 
