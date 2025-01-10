@@ -13,10 +13,10 @@ function create {
   echo "URL: $IMAGE_URL"
 
   mkdir p "/tmp/images"
-  curl -o "$IMAGE_FILE" -k -L "$IMAGE_URL"
+  curl -o "$IMAGE_FILE" -L "$IMAGE_URL"
   virt-customize -a "$IMAGE_FILE" --install qemu-guest-agent
 
-  curl -o "$SNIPPETS/$NAME.yml" -k -L "$GITHUB_BASE/cloud-init/$NAME.yml"
+  curl -o "$SNIPPETS/$NAME.yml" -L "$GITHUB_BASE/cloud-init/$NAME.yml"
 
   qm destroy "$VMID"
   qm create "$VMID" --name "$NAME"
